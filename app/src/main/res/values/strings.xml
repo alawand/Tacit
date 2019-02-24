@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Tacit</string>
+    <string name="large_text">
+        "Hi! Welcome to Tacit, the call filter that tries to keep your phone quiet!\n\n"
+
+        "Right now, Tacit is in heavy and early development, so some features are missing."
+        "We'll try to get to implementing core functionality (and a snazzy UI) soon!"
+        "But for now, please feel free to explore what's available, and bug Mark if you find an issue!"
+    </string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_add_call_filter">AddCallFilterActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_card_details">CardDetailsActivity</string>
+</resources>
