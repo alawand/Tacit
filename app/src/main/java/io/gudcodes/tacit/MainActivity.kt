@@ -40,8 +40,7 @@ class MainActivity : AppCompatActivity() {
             add(CallFilter(0, "tel:+1256*"))
         }
 
-//        val vm = ViewModelProviders.of(this).get(CallFilterViewModel::class.java)
-        this.vm.filters.observe(this, object: Observer<List<CallFilter>> {
+        vm.filters.observe(this, object: Observer<List<CallFilter>> {
 
             override fun onChanged(filters: List<CallFilter>?) {
 
@@ -50,10 +49,7 @@ class MainActivity : AppCompatActivity() {
                 cards.removeAllViews()
                 for (filter in filters.orEmpty()) {
                     val inflater = LayoutInflater.from(applicationContext)
-                    //val inflater = applicationContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
                     val card = inflater.inflate(R.layout.template_card, cards, false) as CardView
-
-                    card.tag = filter
 
                     card.setOnClickListener {
                         // TODO expand the card to set details
