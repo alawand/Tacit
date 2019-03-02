@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_scrolling.*
 import android.content.Context
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.support.v4.content.ContextCompat.startActivity
 import android.view.*
 import android.widget.LinearLayout
 import kotlinx.coroutines.Dispatchers
@@ -61,7 +64,9 @@ fun setup(context: Context, cards: LinearLayout) {
 
             card.setOnClickListener {
                 // TODO expand the card to set details
-                card.height
+                val intent = Intent(context, CardDetailsActivity::class.java).apply {}
+                intent.flags = FLAG_ACTIVITY_NEW_TASK
+                startActivity(context, intent, null)
             }
 
             var text = card.findViewById<AppCompatTextView>(R.id.filter_text)
@@ -89,6 +94,13 @@ fun add(context: Context, cards: LinearLayout) {
         for (filter in filters) {
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             var card = inflater.inflate(R.layout.template_card, null) as CardView
+
+            card.setOnClickListener {
+                // TODO expand the card to set details
+                val intent = Intent(context, CardDetailsActivity::class.java).apply {}
+                intent.flags = FLAG_ACTIVITY_NEW_TASK
+                startActivity(context, intent, null)
+            }
 
             var text = card.findViewById<AppCompatTextView>(R.id.filter_text)
             text.text = "${filter.filter}"
