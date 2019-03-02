@@ -21,10 +21,10 @@ abstract class CallFilterDatabase : RoomDatabase() {
 @Dao
 interface CallFilterDao {
     @Query("SELECT * FROM callfilter")
-    fun getAll(): List<CallFilter>
+    fun getAll(): LiveData<List<CallFilter>>
 
     @Query("SELECT * FROM callfilter WHERE uid IN (:filterIds)")
-    fun getAllByIds(filterIds: IntArray): List<CallFilter>
+    fun getAllByIds(filterIds: IntArray):  List<CallFilter>
 
     @Query("SELECT * FROM callfilter WHERE :filter GLOB filter")
     fun getAllByFilter(filter: String): CallFilter

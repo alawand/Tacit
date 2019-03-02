@@ -1,41 +1,82 @@
 package io.gudcodes.tacit
 
+import android.arch.lifecycle.*
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_scrolling.*
-import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.support.v4.content.ContextCompat.startActivity
 import android.view.*
 import android.widget.LinearLayout
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import android.support.v7.widget.*
 import android.view.LayoutInflater
 
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var vm : CallFilterViewModel
+
+    fun add(filter: CallFilter) {
+        vm.insert(filter)
+    }
+
+    fun delete(filter: CallFilter) {
+        vm.delete(filter)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scrolling)
         setSupportActionBar(toolbar)
 
-        val cards = include.findViewById<LinearLayout>(R.id.card_layout)
+        vm = ViewModelProviders.of(this).get(CallFilterViewModel::class.java)
 
         fab.setOnClickListener {
-            add(applicationContext, cards)
+            // TODO start details activity, add returned filter
+            add(CallFilter(0, "tel:256*"))
+            add(CallFilter(0, "tel:+256*"))
+            add(CallFilter(0, "tel:1256*"))
+            add(CallFilter(0, "tel:+1256*"))
         }
 
-        fab.setOnLongClickListener {
-            delete(applicationContext, cards)
-            true
-        }
+//        val vm = ViewModelProviders.of(this).get(CallFilterViewModel::class.java)
+        this.vm.filters.observe(this, object: Observer<List<CallFilter>> {
 
+            override fun onChanged(filters: List<CallFilter>?) {
 
-        setup(applicationContext, cards)
+                val cards = include.findViewById<LinearLayout>(R.id.card_layout)
+
+                cards.removeAllViews()
+                for (filter in filters.orEmpty()) {
+                    val inflater = LayoutInflater.from(applicationContext)
+                    //val inflater = applicationContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                    val card = inflater.inflate(R.layout.template_card, cards, false) as CardView
+
+                    card.tag = filter
+
+                    card.setOnClickListener {
+                        // TODO expand the card to set details
+                        val intent = Intent(applicationContext, CardDetailsActivity::class.java).apply {}
+                        intent.flags = FLAG_ACTIVITY_NEW_TASK
+                        startActivity(applicationContext, intent, null)
+                    }
+
+                    card.setOnLongClickListener {
+                        delete(filter)
+                        true
+                    }
+
+                    val text = card.findViewById<AppCompatTextView>(R.id.filter_text)
+                    text.text = filter.filter.removePrefix("tel:")
+
+                    val stats = card.findViewById<AppCompatTextView>(R.id.filter_stats)
+                    stats.text = "0 calls blocked"
+
+                    cards.addView(card)
+                }
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -53,64 +94,4 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-}
-
-fun setup(context: Context, cards: LinearLayout) {
-    val filters = CallFilterDatabase.getInstance(context).callFilterDao().getAll()
-    GlobalScope.launch(Dispatchers.Main) { // launch coroutine in the main thread
-        for (filter in filters) {
-            val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            var card = inflater.inflate(R.layout.template_card, null) as CardView
-
-            card.setOnClickListener {
-                // TODO expand the card to set details
-                val intent = Intent(context, CardDetailsActivity::class.java).apply {}
-                intent.flags = FLAG_ACTIVITY_NEW_TASK
-                startActivity(context, intent, null)
-            }
-
-            var text = card.findViewById<AppCompatTextView>(R.id.filter_text)
-            text.text = "${filter.filter}"
-
-            cards.addView(card)
-        }
-    }
-}
-
-fun add(context: Context, cards: LinearLayout) {
-    val db = CallFilterDatabase.getInstance(context)
-
-    // TODO remove this and implement UI
-    db.callFilterDao().insertAll(
-        CallFilter(0, "tel:256*"),
-        CallFilter(0, "tel:+256*"),
-        CallFilter(0, "tel:1256*"),
-        CallFilter(0, "tel:+1256*")
-    )
-
-    // TODO remove me and just add the one
-    val filters = CallFilterDatabase.getInstance(context).callFilterDao().getAll()
-    GlobalScope.launch(Dispatchers.Main) { // launch coroutine in the main thread
-        for (filter in filters) {
-            val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            var card = inflater.inflate(R.layout.template_card, null) as CardView
-
-            card.setOnClickListener {
-                // TODO expand the card to set details
-                val intent = Intent(context, CardDetailsActivity::class.java).apply {}
-                intent.flags = FLAG_ACTIVITY_NEW_TASK
-                startActivity(context, intent, null)
-            }
-
-            var text = card.findViewById<AppCompatTextView>(R.id.filter_text)
-            text.text = "${filter.filter}"
-
-            cards.addView(card)
-        }
-    }
-}
-
-fun delete(context: Context, cards: LinearLayout) {
-    CallFilterDatabase.getInstance(context).callFilterDao().deleteAll()
-    cards.removeAllViews()
 }
