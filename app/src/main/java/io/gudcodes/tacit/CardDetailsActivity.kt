@@ -1,11 +1,13 @@
 package io.gudcodes.tacit
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity;
 
 import kotlinx.android.synthetic.main.activity_card_details.*
+import kotlinx.android.synthetic.main.content_card_details.*
+
 
 class CardDetailsActivity : AppCompatActivity() {
 
@@ -16,11 +18,19 @@ class CardDetailsActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        Intent().also { intent ->
-            intent.setData(Uri.parse("tel:+1256*"))
-            setResult(RESULT_OK, intent)
-            finish()
+        val save = findViewById<FloatingActionButton>(R.id.saveButton)
+
+        save.setOnClickListener {
+            Intent().also { intent ->
+                intent.putExtra("pattern", "tel:+1" + filterEditText.text.toString())
+
+                intent.putExtra("rejectCall", rejectCallSwitch.isChecked)
+                intent.putExtra("skipCallLog", skipCallLogSwitch.isChecked)
+                intent.putExtra("skipNotification", skipNotificationSwitch.isChecked)
+
+                setResult(RESULT_OK, intent)
+                finish()
+            }
         }
     }
-
 }

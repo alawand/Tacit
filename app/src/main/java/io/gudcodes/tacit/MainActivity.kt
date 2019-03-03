@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_scrolling.*
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.support.v4.content.ContextCompat.startActivity
 import android.view.*
 import android.widget.LinearLayout
 import android.support.v7.widget.*
@@ -37,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CREATE_FILTER_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
-                CallFilter(0, data!!.dataString).also {filter ->
+                CallFilter(0, data?.extras?.get("pattern") as String).also { filter ->
                     add(filter)
                 }
             }
