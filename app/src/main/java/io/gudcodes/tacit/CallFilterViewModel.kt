@@ -6,19 +6,20 @@ import android.arch.lifecycle.LiveData
 
 class CallFilterViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val db: CallFilterDatabase
+    private val repo: CallFilterRepository
+
     var filters: LiveData<List<CallFilter>>
 
     init {
-        db = CallFilterDatabase.getInstance(application)
-        filters = db.callFilterDao().getAll()
+        repo = CallFilterRepository(application)
+        filters = repo.filters
     }
 
     fun insert(filter: CallFilter) {
-        db.callFilterDao().insertAll(filter)
+        repo.insert(filter)
     }
 
     fun delete(filter: CallFilter) {
-        db.callFilterDao().delete(filter)
+        repo.delete(filter)
     }
 }

@@ -1,5 +1,6 @@
 package io.gudcodes.tacit
 
+import android.app.Activity
 import android.arch.lifecycle.*
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -13,6 +14,8 @@ import android.support.v7.widget.*
 import android.view.LayoutInflater
 
 
+const val CREATE_FILTER_REQUEST = 1
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var vm : CallFilterViewModel
@@ -23,6 +26,22 @@ class MainActivity : AppCompatActivity() {
 
     fun delete(filter: CallFilter) {
         vm.delete(filter)
+    }
+
+    private fun createFilter() {
+        Intent(applicationContext, CardDetailsActivity::class.java).also { intent ->
+            startActivityForResult(intent, CREATE_FILTER_REQUEST)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == CREATE_FILTER_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                CallFilter(0, data!!.dataString).also {filter ->
+                    add(filter)
+                }
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             add(CallFilter(0, "tel:256*"))
             add(CallFilter(0, "tel:+256*"))
             add(CallFilter(0, "tel:1256*"))
-            add(CallFilter(0, "tel:+1256*"))
+            createFilter()
         }
 
         vm.filters.observe(this, object: Observer<List<CallFilter>> {
@@ -53,9 +72,6 @@ class MainActivity : AppCompatActivity() {
 
                     card.setOnClickListener {
                         // TODO expand the card to set details
-                        val intent = Intent(applicationContext, CardDetailsActivity::class.java).apply {}
-                        intent.flags = FLAG_ACTIVITY_NEW_TASK
-                        startActivity(applicationContext, intent, null)
                     }
 
                     card.setOnLongClickListener {

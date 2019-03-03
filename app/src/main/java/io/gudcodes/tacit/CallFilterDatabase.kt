@@ -30,10 +30,16 @@ interface CallFilterDao {
     fun getAllByFilter(filter: String): CallFilter
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(vararg filters: CallFilter)
+    fun insert(filter: CallFilter)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertMultiple(vararg filters: CallFilter)
 
     @Delete
     fun delete(user: CallFilter)
+
+    @Delete
+    fun deleteMultiple(vararg filters: CallFilter)
 
     @Query("DELETE FROM callfilter")
     fun deleteAll()

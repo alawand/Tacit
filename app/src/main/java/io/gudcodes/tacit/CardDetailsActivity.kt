@@ -1,5 +1,7 @@
 package io.gudcodes.tacit
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
 
@@ -13,6 +15,12 @@ class CardDetailsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        Intent().also { intent ->
+            intent.setData(Uri.parse("tel:+1256*"))
+            setResult(RESULT_OK, intent)
+            finish()
+        }
     }
 
 }

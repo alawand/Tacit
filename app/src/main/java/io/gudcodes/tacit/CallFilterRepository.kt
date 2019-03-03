@@ -16,15 +16,28 @@ class CallFilterRepository internal constructor(application: Application) {
         filters = dao.getAll()
     }
 
-    fun insert(filter: CallFilter) {
-        insertAsyncTask(dao).execute(filter)
+    fun insert(vararg filter: CallFilter) {
+        insertAsyncTask(dao).execute(*filter)
     }
 
-    private class insertAsyncTask internal constructor(private val filter: CallFilterDao) :
+    fun delete(vararg filter: CallFilter) {
+        deleteAsyncTask(dao).execute(*filter)
+    }
+
+    private class insertAsyncTask internal constructor(private val filterDao: CallFilterDao) :
         AsyncTask<CallFilter, Void, Void>() {
 
-        override fun doInBackground(vararg params: CallFilter): Void? {
-            filter.insertAll(params[0])
+        override fun doInBackground(vararg filter: CallFilter): Void? {
+            filterDao.insertMultiple(*filter)
+            return null
+        }
+    }
+
+    private class deleteAsyncTask internal constructor(private val filterDao: CallFilterDao) :
+        AsyncTask<CallFilter, Void, Void>() {
+
+        override fun doInBackground(vararg filter: CallFilter): Void? {
+            filterDao.deleteMultiple(*filter)
             return null
         }
     }
