@@ -35,7 +35,12 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CREATE_FILTER_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
-                CallFilter(0, data?.extras?.get("pattern") as String).also { filter ->
+                val extras = data?.extras!!
+                CallFilter(0, extras.get("pattern") as String).also { filter ->
+                    filter.rejectCall = extras.get("rejectCall") as Boolean
+                    filter.skipCallLog = extras.get("skipCallLog") as Boolean
+                    filter.skipNotification = extras.get("skipNotification") as Boolean
+
                     add(filter)
                 }
             }

@@ -6,15 +6,19 @@ import android.arch.persistence.room.Room
 import android.content.Context
 
 
-@Database(entities = [CallFilter::class], version = 1)
+@Database(entities = [CallFilter::class], version = 2)
 abstract class CallFilterDatabase : RoomDatabase() {
     abstract fun callFilterDao(): CallFilterDao
 
     companion object : SingletonHolder<CallFilterDatabase, Context>({
         Room.databaseBuilder(
             it.applicationContext,
-            CallFilterDatabase::class.java, "Sample.db"
-        ).allowMainThreadQueries().build()
+            CallFilterDatabase::class.java,
+            "Tacit.db"
+        )
+            .allowMainThreadQueries()
+            .addMigrations(CALL_FILTER_MIGRATION_1_2)
+            .build()
     })
 }
 
