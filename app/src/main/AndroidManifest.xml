@@ -18,26 +18,6 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="io.gudcodes.tacit.MainActivity"/>
         </activity>
-        <activity
-                android:name=".AddCallFilterActivity"
-                android:label="@string/title_activity_add_call_filter"
-                android:parentActivityName=".MainActivity"
-                android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="io.gudcodes.tacit.MainActivity"/>
-        </activity> <!-- <service -->
-        <!-- android:name=".CallService" -->
-        <!-- android:enabled="true" -->
-        <!-- android:exported="true" -->
-        <!-- android:permission="android.permission.BIND_INCALL_SERVICE"> -->
-        <!-- <meta-data -->
-        <!-- android:name="android.telecom.IN_CALL_SERVICE_UI" -->
-        <!-- android:value="true"/> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.telecom.InCallService"/> -->
-        <!-- </intent-filter> -->
-        <!-- </service> -->
         <service
                 android:name=".CallScreeningService"
                 android:permission="android.permission.BIND_SCREENING_SERVICE">
