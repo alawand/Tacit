@@ -18,7 +18,7 @@ class CallScreeningService : CallScreeningService() {
         var response = responseBuilder.build()
 
         val db = CallFilterDatabase.getInstance(applicationContext)
-        val tel = URLDecoder.decode(details.handle.toString(), "UTF-8")
+        val tel = details.handle.schemeSpecificPart
         val filter = db.callFilterDao().getAllByFilter(tel)
 
         // If a filter was tripped, reject the call.
@@ -26,9 +26,9 @@ class CallScreeningService : CallScreeningService() {
         if (filter != null) {
             response = responseBuilder
                 .setDisallowCall(true)
-                .setRejectCall(true)
-                .setSkipCallLog(true)
-                .setSkipNotification(true)
+                .setRejectCall(filter.rejectCall)
+                .setSkipCallLog(filter.skipCallLog)
+                .setSkipNotification(filter.skipNotification)
                 .build()
         }
 

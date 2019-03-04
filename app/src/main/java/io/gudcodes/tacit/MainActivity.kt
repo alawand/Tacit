@@ -55,10 +55,6 @@ class MainActivity : AppCompatActivity() {
         vm = ViewModelProviders.of(this).get(CallFilterViewModel::class.java)
 
         fab.setOnClickListener {
-            // TODO start details activity, add returned filter
-            add(CallFilter(0, "tel:256*"))
-            add(CallFilter(0, "tel:+256*"))
-            add(CallFilter(0, "tel:1256*"))
             createFilter()
         }
 

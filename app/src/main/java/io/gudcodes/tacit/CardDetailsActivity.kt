@@ -22,7 +22,7 @@ class CardDetailsActivity : AppCompatActivity() {
 
         save.setOnClickListener {
             Intent().also { intent ->
-                intent.putExtra("pattern", "tel:+1" + filterEditText.text.toString())
+                intent.putExtra("pattern", filterEditText.text.toString())
 
                 intent.putExtra("rejectCall", rejectCallSwitch.isChecked)
                 intent.putExtra("skipCallLog", skipCallLogSwitch.isChecked)
