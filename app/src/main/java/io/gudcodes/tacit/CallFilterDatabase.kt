@@ -30,8 +30,8 @@ interface CallFilterDao {
     @Query("SELECT * FROM callfilter WHERE uid IN (:filterIds)")
     fun getAllByIds(filterIds: IntArray):  List<CallFilter>
 
-    @Query("SELECT * FROM callfilter WHERE :filter GLOB filter")
-    fun getAllByFilter(filter: String): CallFilter
+    @Query("SELECT * FROM callfilter WHERE :tel GLOB filter")
+    fun match(tel: String): List<CallFilter>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(filter: CallFilter)
